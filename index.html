@@ -12,7 +12,7 @@
     <div class="container">
       <div class="jumbotron">
         <div class="jumbotron init-form-jumbo">
-          <form id="player-and-game-form">
+          <form id="new-game-form">
             <select id="player-type-select">
               <option value="two-player">Two Human Players</option>
               <option value="easy-ai">Human vs Easy AI</option>
@@ -26,14 +26,24 @@
             <button type="submit" class="btn">New Game</button>
           </form>
         </div>
-        <div class="jumbotron playing-field-jumbo">
+        <div class="jumbotron playing-field-jumbo hidden-start">
           <div class="dice-field">
             <div class="row">
               <div class="col-md-3 die-one">
-
+                <img class="die-1-1 hidden-start" src="./img/oie_die-face-one.png" alt="Die one on One">
+                <img class="die-1-2 hidden-start" src="./img/oie_die-face-two.png" alt="Die one on Two">
+                <img class="die-1-3 hidden-start" src="./img/oie_die-face-three.png" alt="Die one on Three">
+                <img class="die-1-4 hidden-start" src="./img/oie_die-face-four.png" alt="Die one on Four">
+                <img class="die-1-5 hidden-start" src="./img/oie_die-face-five.png" alt="Die one on Five">
+                <img class="die-1-6 hidden-start" src="./img/oie_die-face-six.png" alt="Die one on Six">
               </div>
-              <div class="col-md-3 die-two">
-
+              <div class="col-md-3 die-two hidden-start">
+                <img class="die-2-1 hidden-start" src="./img/oie_die-face-one.png" alt="Die two on One">
+                <img class="die-2-2 hidden-start" src="./img/oie_die-face-two.png" alt="Die two on Two">
+                <img class="die-2-3 hidden-start" src="./img/oie_die-face-three.png" alt="Die two on Three">
+                <img class="die-2-4 hidden-start" src="./img/oie_die-face-four.png" alt="Die two on Four">
+                <img class="die-2-5 hidden-start" src="./img/oie_die-face-five.png" alt="Die two on Five">
+                <img class="die-2-6 hidden-start" src="./img/oie_die-face-six.png" alt="Die two on Six">
               </div>
               <div class="col-md-6 round-info">
                 <h5>Turn stats</h5>
@@ -46,6 +56,7 @@
                     <button type="button" class="btn float-center">Hold points.</button>
                   </div>
                 </div>
+                <button type="button" class="btn float-center">Next Turn.</button>
               </div>
             </div>
           </div>
