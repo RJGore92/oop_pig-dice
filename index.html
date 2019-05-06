@@ -10,19 +10,28 @@
   </head>
   <body>
     <div class="container">
-      <div class="jumbotron">
+      <div class="jumbotron minor-padding">
         <div class="jumbotron init-form-jumbo">
+          <h4>Welcome to Pig Dice.</h4>
+          <p>If this is your first time playing or need a refresher on the rules, please follow <a href="https://en.wikipedia.org/wiki/Pig_%28dice_game%29">this link</a>.</p>
+          <p>To start playing, please select your game mode and if you will be playing with two human players or a human player and AI below.</p>
           <form id="new-game-form">
-            <select id="player-type-select">
-              <option value="two-player">Two Human Players</option>
-              <option value="easy-ai">Human vs Easy AI</option>
-              <option value="hard-ai">Human vs Hard AI</option>
-            </select>
-            <select id="game-type-select">
-              <option value="one-die">One Die</option>
-              <option value="two-dice-standard">Two Dice, Standard Rules</option>
-              <option value="two-dice-big-pig">Two Dice, "Big Pig" Rules</option>
-            </select>
+            <div class="form-group">
+              <label for="player-type-select">Select what players are participating.</label>
+              <select id="player-type-select">
+                <option value="two-player">Two Human Players</option>
+                <option value="easy-ai">Human vs Easy AI</option>
+                <option value="hard-ai">Human vs Hard AI</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="game-type-select">Select your game mode for Pig Dice.</label>
+              <select id="game-type-select">
+                <option value="one-die">One Die</option>
+                <option value="two-dice-standard">Two Dice, Standard Rules</option>
+                <option value="two-dice-big-pig">Two Dice, "Big Pig" Rules</option>
+              </select>
+            </div>
             <button type="submit" class="btn">New Game</button>
           </form>
         </div>
@@ -46,17 +55,22 @@
                 <img class="die-2-6 hidden-start" src="./img/oie_die-face-six.png" alt="Die two on Six">
               </div>
               <div class="col-md-6 round-info">
-                <h5>Turn stats</h5>
+                <h4>Pig Dice: <span id="game-mode-display"></span> (<span id="player-state-display"></span>)</h4>
+                <h5>Turn stats: </h5>
+                <p>Current Turn: Player <span id="player-turn-number"></span>.</p>
                 <p>Turn Score: <span id="score-value"></span> points.</p>
                 <div class="row">
                   <div class="col-6">
-                    <button type="button" class="btn float-center">Roll again.</button>
+                    <button type="button" class="btn float-center" onclick="determineScoring()">Roll.</button>
                   </div>
                   <div class="col-6">
-                    <button type="button" class="btn float-center">Hold points.</button>
+                    <button type="button" class="btn float-center" onclick="holdPoints()">Hold points.</button>
                   </div>
                 </div>
-                <button type="button" class="btn float-center">Next Turn.</button>
+                <button type="button" class="btn float-center" onclick="newTurn()">Next Turn.</button>
+                <br>
+                <p>Player One Held Score: <span id="player-one-score-value">0</span> points.  <span id="player-one-victory">Player one has won.</span></p>
+                <p>Player Two Held Score: <span id="player-two-score-value">0</span> points.  <span id="player-two-victory">Player two has won.</span></p>
               </div>
             </div>
           </div>

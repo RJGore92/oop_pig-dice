@@ -1,3 +1,15 @@
 .hidden-start {
   display: none;
 }
+
+.minor-padding {
+  padding: 35px;
+}
+
+.init-form-jumbo {
+  background-image: linear-gradient(to right, gold, orange, gold);
+}
+
+.float-center {
+  float: center;
+}

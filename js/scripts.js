@@ -125,7 +125,7 @@ PlayerList.prototype.determineLeader = function () {
   }
 };
 
-var currentPlayerSet = new playerList();
+var currentPlayerSet = new PlayerList();
 
 function Player() {
   this.score = 0,
@@ -168,23 +168,25 @@ Player.prototype.assignHardAIPlayer = function () {
 };
 
 function determineBustStandard() {
-  var dieSetToRead = currentDieSet;
-  dieSetToRead.dieGroup.forEach(function(die) {
-    if (die.readValue() == 1) {
-      scoreSum = 0;
-      turnEndStatus = true;
-      return true;
-    }
-  });
-  return false;
+  if (currentDieSet.dieGroup[0].readValue() == 1) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 function addToPendingScoreStandard() {
   var checkBust = determineBustStandard();
+  console.log(checkBust);
   if (!(checkBust)) {
     currentDieSet.dieGroup.forEach(function (die) {
       scoreSum += die.readValue();
     });
+  }
+  else {
+    scoreSum = 0;
+    turnEndStatus = true;
   }
 }
 
@@ -213,7 +215,9 @@ function determineBustTwoDice(playerId) {
 }
 
 function addToPendingScoreTwoDice() {
-  var checkBust = determineBustTwoDice();
+  var playerIDToRead = playerTurn + 1;
+  var checkBust = determineBustTwoDice(playerIDToRead);
+  console.log(checkBust);
   if (!(checkBust)) {
     currentDieSet.dieGroup.forEach(function (die) {
       scoreSum += die.readValue();
@@ -256,11 +260,204 @@ function addToPendingScoreBigPig() {
   }
 }
 
+function setupNewGame(playersType, gameMode) {
+  var playersTypeRead = playersType.toLowerCase();
+  var gameModeRead = gameMode.toLowerCase();
+  console.log(playersTypeRead);
+  console.log(gameModeRead);
+  if (playersTypeRead == "two-player") {
+    aiState = 0;
+  }
+  if (playersTypeRead == "easy-ai") {
+    aiState = 1;
+  }
+  if (playersTypeRead == "hard-ai") {
+    aiState = 2;
+  }
+  if (gameModeRead == "one-die") {
+    gameState = 0;
+  }
+  if (gameModeRead == "two-dice-standard") {
+    gameState = 1;
+  }
+  if (gameModeRead == "two-dice-big-pig") {
+    gameState = 2;
+  }
+}
+
+function initializeGame(playerState, gameType) {
+  $("div.playing-field-jumbo").show();
+  currentDieSet.newGameDiceReset();
+  currentPlayerSet.newGamePlayerReset();
+  scoreSum = 0;
+  var dieOne = new Die();
+  var dieTwo = new Die();
+  var playerOne = new Player();
+  playerOne.assignHumanPlayer();
+  var playerTwo = new Player();
+  if (playerState == 0) {
+    $("span#player-state-display").text("Human vs. Human");
+    playerTwo.assignHumanPlayer();
+  }
+  if (playerState == 1) {
+    $("span#player-state-display").text("Human vs. AI (Easy)");
+    playerTwo.assignEasyAIPlayer();
+  }
+  if (playerState == 2) {
+    $("span#player-state-display").text("Human vs. AI (Hard)");
+    playerTwo.assignHardAIPlayer();
+  }
+  currentPlayerSet.addPlayer(playerOne);
+  currentPlayerSet.addPlayer(playerTwo);
+  if (gameType == 0) {
+    $("span#game-mode-display").text("One Die Pig");
+    currentDieSet.addDie(dieOne);
+    $("div.die-two").hide();
+  }
+  if (gameType == 1) {
+    $("span#game-mode-display").text("Two Dice Pig");
+    currentDieSet.addDie(dieOne);
+    currentDieSet.addDie(dieTwo);
+    $("div.die-two").show();
+  }
+  if (gameType == 2) {
+    $("span#game-mode-display").text("Two Dice Big Pig");
+    $("div.die-two").show();
+    currentDieSet.addDie(dieOne);
+    currentDieSet.addDie(dieTwo);
+  }
+  $("span#player-turn-number").text(playerTurn + 1);
+  $("span#score-value").text(scoreSum);
+  hideAllDieImages();
+}
+
+function displayDieOne(dieVal) {
+  $("img.die-1-1").hide();
+  $("img.die-1-2").hide();
+  $("img.die-1-3").hide();
+  $("img.die-1-4").hide();
+  $("img.die-1-5").hide();
+  $("img.die-1-6").hide();
+  $("img.die-1-" + dieVal).show();
+}
+
+function displayDieTwo(dieVal) {
+  $("img.die-2-1").hide();
+  $("img.die-2-2").hide();
+  $("img.die-2-3").hide();
+  $("img.die-2-4").hide();
+  $("img.die-2-5").hide();
+  $("img.die-2-6").hide();
+  $("img.die-2-" + dieVal).show();
+}
+
+function hideAllDieImages() {
+  $("img.die-1-1").hide();
+  $("img.die-1-2").hide();
+  $("img.die-1-3").hide();
+  $("img.die-1-4").hide();
+  $("img.die-1-5").hide();
+  $("img.die-1-6").hide();
+  $("img.die-2-1").hide();
+  $("img.die-2-2").hide();
+  $("img.die-2-3").hide();
+  $("img.die-2-4").hide();
+  $("img.die-2-5").hide();
+  $("img.die-2-6").hide();
+}
+
+function executeRoll() {
+  currentDieSet.rollAllDice();
+  displayDieOne(currentDieSet.dieGroup[0].readValue());
+  if (currentDieSet.dieGroup.length == 2) {
+    displayDieTwo(currentDieSet.dieGroup[1].readValue());
+  }
+}
+
+function determineScoring() {
+  if (!turnEndStatus && !gameEndState) {
+    var playerIDToRead = playerTurn + 1;
+    executeRoll();
+    if (gameState == 0) {
+      addToPendingScoreStandard();
+    }
+    if (gameState == 1) {
+      addToPendingScoreTwoDice(playerIDToRead);
+    }
+    if (gameState == 2) {
+      addToPendingScoreBigPig();
+    }
+    $("span#score-value").text(scoreSum);
+  }
+  else if (gameEndState) {
+    alert("The game has ended.  To play again, click 'new game'.");
+  }
+  else {
+    alert("The player's turn is ended.  Please click the 'next turn' button to continue gameplay.");
+  }
+}
+
+function holdPoints() {
+  var playerIDToRead = playerTurn + 1;
+  if ((scoreSum > 0) && (!turnEndStatus) && (!gameEndState)) {
+    currentPlayerSet.players[playerIDToRead].addToScore(scoreSum);
+    scoreSum = 0;
+    turnEndStatus = true;
+    if (playerTurn == 0) {
+      $("span#player-one-score-value").text(currentPlayerSet.players[0].readScore());
+    }
+    else {
+      $("span#player-two-score-value").text(currentPlayerSet.players[1].readScore());
+    }
+    if (currentPlayerSet.players[playerIDToRead].determineWinner()) {
+      gameEndState = true;
+      if (playerIDToRead == 1) {
+        $("span#player-one-victory").show();
+      }
+      else {
+        $("span#player-two-victory").show();
+      }
+    }
+  }
+  else if (gameEndState) {
+    alert("The game has ended.  To play again, click 'new game'.");
+  }
+  else {
+    alert("The player's turn is ended.  PLease click the 'next turn' button to continue gameplay.")
+  }
+}
+
+function newTurn() {
+  if (turnEndStatus && !gameEndState) {
+    playerTurn += 1;
+    if (playerTurn == 2) {
+      playerTurn = 0;
+    }
+    turnEndStatus = false;
+  }
+  else if (gameEndState) {
+    alert("The game has ended.  To play again, click 'new game'.")
+  }
+  else {
+    alert("This turn has not been ended by bust or player call yet.")
+  }
+}
+
+var gameEndState = false;
+var aiState = 0;
+var gameState = 0;
+var playerTurn = 0;
+var turnEndStatus = false;
+var scoreSum = 0;
+
 $(document).ready(function() {
-  var playerTurn = 0;
-  var turnEndStatus = false;
-  var scoreSum = 0;
   $("form#new-game-form").submit(function(event) {
     event.preventDefault();
+    var playerTypeSelect = $("select#player-type-select").val();
+    var gameModeSelect = $("select#game-type-select").val();
+    setupNewGame(playerTypeSelect, gameModeSelect);
+    console.log(aiState);
+    console.log(gameState);
+    initializeGame(aiState, gameState);
   });
 });
