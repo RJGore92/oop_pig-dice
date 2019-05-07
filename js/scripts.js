@@ -398,12 +398,13 @@ function determineScoring() {
 }
 
 function holdPoints() {
-  var playerIDToRead = playerTurn + 1;
+  var playerIDToRead = playerTurn;
   if ((scoreSum > 0) && (!turnEndStatus) && (!gameEndState)) {
     currentPlayerSet.players[playerIDToRead].addToScore(scoreSum);
     scoreSum = 0;
     turnEndStatus = true;
     if (playerTurn == 0) {
+
       $("span#player-one-score-value").text(currentPlayerSet.players[0].readScore());
     }
     else {
@@ -411,7 +412,7 @@ function holdPoints() {
     }
     if (currentPlayerSet.players[playerIDToRead].determineWinner()) {
       gameEndState = true;
-      if (playerIDToRead == 1) {
+      if (playerIDToRead == 0) {
         $("span#player-one-victory").show();
       }
       else {
@@ -433,6 +434,7 @@ function newTurn() {
     if (playerTurn == 2) {
       playerTurn = 0;
     }
+    $("span#player-turn-number").text(playerTurn + 1);
     turnEndStatus = false;
   }
   else if (gameEndState) {

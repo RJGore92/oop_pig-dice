@@ -20,8 +20,8 @@
               <label for="player-type-select">Select what players are participating.</label>
               <select id="player-type-select">
                 <option value="two-player">Two Human Players</option>
-                <option value="easy-ai">Human vs Easy AI</option>
-                <option value="hard-ai">Human vs Hard AI</option>
+                <option value="easy-ai">Human vs Easy AI (Currently unavailable)</option>
+                <option value="hard-ai">Human vs Hard AI (Currently Unavailable)</option>
               </select>
             </div>
             <div class="form-group">
@@ -69,8 +69,8 @@
                 </div>
                 <button type="button" class="btn float-center" onclick="newTurn()">Next Turn.</button>
                 <br>
-                <p>Player One Held Score: <span id="player-one-score-value">0</span> points.  <span id="player-one-victory">Player one has won.</span></p>
-                <p>Player Two Held Score: <span id="player-two-score-value">0</span> points.  <span id="player-two-victory">Player two has won.</span></p>
+                <p>Player One Held Score: <span id="player-one-score-value">0</span> points.  <span class="hidden-start" id="player-one-victory">Player one has won.</span></p>
+                <p>Player Two Held Score: <span id="player-two-score-value">0</span> points.  <span class="hidden-start" id="player-two-victory">Player two has won.</span></p>
               </div>
             </div>
           </div>
